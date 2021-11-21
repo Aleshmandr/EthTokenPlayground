@@ -1,5 +1,6 @@
-﻿const PapToken = artifacts.require("PapToken");
+﻿const MyHyperverseToken = artifacts.require("MyHyperverseToken");
 
 module.exports = function (deployer) {
-    deployer.deploy(PapToken);
+    var initialSupply = 1000000;
+    deployer.deploy(MyHyperverseToken, initialSupply);
 };

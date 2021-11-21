@@ -1,8 +1,8 @@
-﻿var PapToken = artifacts.require("./PapToken.sol");
+﻿var MyHyperverseToken = artifacts.require("./MyHyperverseToken.sol");
 
-contract('PapToken', function (accounts){
+contract('MyHyperverse', function (accounts){
     it('set total supply upon deployment ', function () {
-        return PapToken.deployed().then(function (instance){
+        return MyHyperverseToken.deployed().then(function (instance){
             tokenInstance = instance;
             return tokenInstance.totalSupply();
         }).then(function (totalSupply){

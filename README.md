@@ -12,6 +12,9 @@ Required dependencies:
 
 ##### Truffle commands:
 
+Init in working directory:
+`$ truffle init`
+
 Enter console:
 `$ truffle console`
 
