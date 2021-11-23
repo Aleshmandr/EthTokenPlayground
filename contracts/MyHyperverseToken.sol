@@ -6,12 +6,30 @@ contract MyHyperverseToken {
     string public symbol = "MHV";
     string public standard = "My Hyperverse Token v1.0";
 
-    uint256 public totalSupply;
+    uint256 private _totalSupply;
 
     mapping(address => uint256) public balanceOf;
 
-    constructor(uint256 _totalSupply) {
-        balanceOf[msg.sender] = _totalSupply;
-        totalSupply = _totalSupply;
+    constructor(uint256 initialTotalSupply) {
+        balanceOf[msg.sender] = initialTotalSupply;
+        _totalSupply = initialTotalSupply;
     }
+
+    function totalSupply() public view returns(uint256){
+        return _totalSupply;
+    }
+
+    function transfer(address to, uint256 value) public returns (bool success){
+        require(balanceOf[msg.sender] >= value);
+        balanceOf[msg.sender]-=value;
+        balanceOf[to]+=value;
+        emit Transfer(msg.sender, to, value);
+        return true;
+    }
+
+    event Transfer(
+        address indexed from,
+        address indexed to,
+        uint256 value
+    );
 }
