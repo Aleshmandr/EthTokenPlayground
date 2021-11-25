@@ -39,8 +39,8 @@ contract('MyHyperverse', function (accounts){
         assert.equal(receipt.logs[0].args.to, accounts[1], "Transfer event has receiver account");
         assert.equal(receipt.logs[0].args.value, testSendValue, "Transfer event has value");
         const balance0 = await await token.balanceOf(accounts[0]);
-        assert.equal(balance.toNumber(), initialSupply - testSendValue, "deducts value from the sending account");
+        assert.equal(balance0.toNumber(), initialSupply - testSendValue, "deducts value from the sending account");
         const balance1 = await token.balanceOf(accounts[1]);
-        assert.equal(balance.toNumber(), testSendValue, "adds value to the receiving account");
+        assert.equal(balance1.toNumber(), testSendValue, "adds value to the receiving account");
     });
 })
