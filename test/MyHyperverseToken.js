@@ -43,4 +43,16 @@ contract('MyHyperverse', function (accounts){
         const balance1 = await token.balanceOf(accounts[1]);
         assert.equal(balance1.toNumber(), testSendValue, "adds value to the receiving account");
     });
+
+    it("approves tokens", async () => {
+        const token = await MyHyperverseToken.deployed();
+        const success = await token.approve.call(accounts[1], 100);
+        assert.equal(success, true, "returns true");
+        const receipt = await token.approve(accounts[1], 100);
+        assert.equal(receipt.logs[0].event, "Approval", "has Approval event");
+        const approvedAllowance = await token.allowance(accounts[0], accounts[1]);
+        assert.equal(approvedAllowance.toNumber(), 100, "has correct allowance")
+        //const balance1 = await token.balanceOf(accounts[1]);
+        //assert.equal(balance1, 100)
+    });
 })
