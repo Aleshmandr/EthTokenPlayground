@@ -28,12 +28,14 @@ contract('MyHyperverse', function (accounts){
         const token = await MyHyperverseToken.deployed();
         try {
             await token.transfer.call(accounts[1], tooMuchValue);
+            assert.fail();
         } catch (error) {
             assert(error.message.indexOf('revert')>=0, 'message must contain revert');
         }
         const success = await token.transfer.call(accounts[1], testSendValue, {from: accounts[0]});
         assert.equal(success, true, "returns true");
         const receipt = await token.transfer(accounts[1], testSendValue, {from: accounts[0]});
+        assert.equal(receipt.logs.length, 1, "has one event");
         assert.equal(receipt.logs[0].event, "Transfer", "has Transfer event");
         assert.equal(receipt.logs[0].args.from, accounts[0], "Transfer event has sender account");
         assert.equal(receipt.logs[0].args.to, accounts[1], "Transfer event has receiver account");
@@ -52,7 +54,47 @@ contract('MyHyperverse', function (accounts){
         assert.equal(receipt.logs[0].event, "Approval", "has Approval event");
         const approvedAllowance = await token.allowance(accounts[0], accounts[1]);
         assert.equal(approvedAllowance.toNumber(), 100, "has correct allowance")
-        //const balance1 = await token.balanceOf(accounts[1]);
-        //assert.equal(balance1, 100)
+    });
+
+    it("handler delegated transfers", async ()=> {
+        const token = await MyHyperverseToken.deployed();
+        fromAccount = accounts[2];
+        toAccount = accounts[3];
+        spendingAccount = accounts[4];
+
+        await token.transfer(fromAccount, 100, {from: accounts[0]});
+        await token.approve(spendingAccount, 10, {from: fromAccount});
+
+        try{
+            await token.transferFrom(fromAccount, toAccount, 101, {from: spendingAccount});
+            assert.fail();
+        }catch (error) {
+            assert(error.message.indexOf('revert')>=0, "cannot transfer value larger then from account balance");
+        }
+
+        try{
+            await token.transferFrom(fromAccount, toAccount, 11, {from: spendingAccount});
+            assert.fail();
+        }catch (error) {
+            assert(error.message.indexOf('revert')>=0, "cannot transfer value larger then approved value");
+        }
+
+        const success = await token.transferFrom.call(fromAccount, toAccount, 10, {from: spendingAccount});
+        assert.equal(success, true, "returns true");
+
+        const receipt = await token.transferFrom(fromAccount, toAccount, 10, {from: spendingAccount});
+        assert.equal(receipt.logs.length, 1, "has one event");
+        assert.equal(receipt.logs[0].event, "Transfer", "has Transfer event");
+        assert.equal(receipt.logs[0].args.from, fromAccount, "Transfer event has sender account");
+        assert.equal(receipt.logs[0].args.to, toAccount, "Transfer event has receiver account");
+        assert.equal(receipt.logs[0].args.value, 10, "Transfer event has value");
+
+        const balanceFrom = await token.balanceOf(fromAccount);
+        assert.equal(balanceFrom.toNumber(), 90, "deducts value from the sending account");
+        const balanceTo = await token.balanceOf(toAccount);
+        assert.equal(balanceTo.toNumber(), 10, "adds value to the receiving account");
+
+        const allowance = await token.allowance(fromAccount, spendingAccount);
+        assert.equal(allowance.toNumber(), 0, "deducts allowance value");
     });
 })

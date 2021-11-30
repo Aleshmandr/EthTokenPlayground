@@ -31,7 +31,16 @@ contract MyHyperverseToken {
     }
 
     function transferFrom(address from, address to, uint256 value) public returns (bool success){
+        require(balanceOf[from] >= value);
+        require(allowance[from][msg.sender] >= value);
+        
+        balanceOf[from]-=value;
+        balanceOf[to]+=value;
 
+        allowance[from][msg.sender]-=value;
+
+        emit Transfer(from, to, value);
+        return true;
     }
 
     function approve(address spender, uint256 value) public returns (bool success){
