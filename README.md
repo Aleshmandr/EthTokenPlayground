@@ -34,4 +34,5 @@ Get total supply:
 `$ token.totalSupply().then(function(s){totalSupply = s;})`
 `$ totalSupply.toNumber()`
 
-
+##### web3 API:
+Documentation (https://web3js.readthedocs.io/en/v1.5.2/)

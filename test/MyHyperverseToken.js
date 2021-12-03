@@ -6,7 +6,7 @@ contract('MyHyperverse', function (accounts){
     var tooMuchValue = 99999999999;
     var testSendValue = 100;
 
-    it("initialize  contract with correct values", async() => {
+    it("initializes contract with correct values", async() => {
        const token = await MyHyperverseToken.deployed();
        const tokenName = await token.name();
        assert.equal(tokenName, "My Hyperverse Token", 'has correct name');
@@ -16,7 +16,7 @@ contract('MyHyperverse', function (accounts){
        assert.equal(tokenStandard, "My Hyperverse Token v1.0", 'has correct standard');
     });
 
-    it("set total supply upon deployment", async () => {
+    it("sets total supply upon deployment", async () => {
         const token = await MyHyperverseToken.deployed();
         const totalSupply = await token.totalSupply();
         assert.equal(totalSupply.toNumber(), initialSupply, 'sets total supply to 1,000,000');
@@ -56,7 +56,7 @@ contract('MyHyperverse', function (accounts){
         assert.equal(approvedAllowance.toNumber(), 100, "has correct allowance")
     });
 
-    it("handler delegated transfers", async ()=> {
+    it("handles delegated transfers", async ()=> {
         const token = await MyHyperverseToken.deployed();
         fromAccount = accounts[2];
         toAccount = accounts[3];
