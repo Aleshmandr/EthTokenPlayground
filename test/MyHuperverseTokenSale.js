@@ -71,7 +71,11 @@ contract('MyHyperverseSale', function (accounts){
         await tokenSaleInstance.endSale({from: admin});
         var adminBalanceAfterSaleEnd = (await tokenInstance.balanceOf(admin)).toNumber();
         assert.equal(adminBalanceBeforeSaleEnd + saleRemainingBalance, adminBalanceAfterSaleEnd, "sale remaining balance returned to admin");
-        //var tokenPrice = (await tokenSaleInstance.tokenPrice()).toNumber();
-        //assert.equal(0, tokenPrice, "contract destroyed (token price reseted)")
+        try{
+            const tokenPrice = await tokenSaleInstance.tokenPrice();
+            assert.fail();
+        }catch (error) {
+            assert(error.message.indexOf("Returned values aren't valid")>=0, "contract destroyed");
+        }
     });
 });
