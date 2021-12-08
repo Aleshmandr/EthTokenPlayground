@@ -36,3 +36,7 @@ Get total supply:
 
 ##### web3 API:
 Documentation (https://web3js.readthedocs.io/en/v1.5.2/)
+
+##### Node:
+Install modules:
+`$ npm install`
