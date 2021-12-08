@@ -19,12 +19,19 @@ contract MyHyperverseTokenSale {
         require(msg.value == multiply(numberOfTokens, tokenPrice));
         require(tokenContract.balanceOf(address(this)) >= numberOfTokens);
         require(tokenContract.transfer(msg.sender, numberOfTokens));
-        tokensSold+=numberOfTokens;
+        tokensSold += numberOfTokens;
         emit Sell(msg.sender, numberOfTokens);
     }
 
     function multiply(uint256 x, uint256 y) internal pure returns (uint256 z){
         require(y == 0 || (z = x * y ) / y == x, "multiply overflow");
+    }
+
+    function endSale() public {
+        require(msg.sender == admin);
+        require(tokenContract.transfer(admin, tokenContract.balanceOf(address(this))));
+        address payable addr = payable(address(admin));
+        selfdestruct(addr);
     }
 
     event Sell(

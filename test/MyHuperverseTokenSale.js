@@ -10,7 +10,7 @@ contract('MyHyperverseSale', function (accounts){
     const numberOfTokensToBuy = 1000;
     const tokensToSale = 300000;// 30% of total supply
 
-    it("initializes the contract with correct values", async ()=>{
+    it("initializes the contract with correct values", async () => {
         tokenSaleInstance = await MyHyperverseTokenSale.deployed();
         const address = tokenSaleInstance.address;
         assert.notEqual(address, "0x0", "has contact address");
@@ -20,7 +20,7 @@ contract('MyHyperverseSale', function (accounts){
         assert.equal(tokenPrice, correctTokenPrice, "token price is correct");
     });
 
-    it("facilitates token buying", async ()=>{
+    it("facilitates token buying", async () => {
         tokenInstance = await MyHyperverseToken.deployed();
         tokenSaleInstance = await MyHyperverseTokenSale.deployed();
         const address = tokenSaleInstance.address;
@@ -53,5 +53,25 @@ contract('MyHyperverseSale', function (accounts){
             assert(error.message.indexOf('revert')>=0, "rejects buying more tokens than available");
         }
 
+    });
+
+    it("ends token sale", async () => {
+        tokenInstance = await MyHyperverseToken.deployed();
+        tokenSaleInstance = await MyHyperverseTokenSale.deployed();
+
+        try{
+            await tokenSaleInstance.endSale({from: tokenBuyer});
+            assert.fail();
+        }catch (error) {
+            assert(error.message.indexOf('revert')>=0, "only admin can end the sale");
+        }
+
+        var adminBalanceBeforeSaleEnd = (await tokenInstance.balanceOf(admin)).toNumber();
+        var saleRemainingBalance = (await tokenInstance.balanceOf(tokenSaleInstance.address)).toNumber();
+        await tokenSaleInstance.endSale({from: admin});
+        var adminBalanceAfterSaleEnd = (await tokenInstance.balanceOf(admin)).toNumber();
+        assert.equal(adminBalanceBeforeSaleEnd + saleRemainingBalance, adminBalanceAfterSaleEnd, "sale remaining balance returned to admin");
+        //var tokenPrice = (await tokenSaleInstance.tokenPrice()).toNumber();
+        //assert.equal(0, tokenPrice, "contract destroyed (token price reseted)")
     });
 });
