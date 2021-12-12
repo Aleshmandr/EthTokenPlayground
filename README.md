@@ -28,7 +28,7 @@ Migration:
 `$ truffle migrate --reset`
 
 Get token:  
-`$ PapToken.deployed().then(function(i){token=i;})`
+`$ MyHyperverseToken.deployed().then(function(i){token=i;})`
 
 Get total supply:
 `$ token.totalSupply().then(function(s){totalSupply = s;})`

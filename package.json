@@ -1,5 +1,5 @@
 {
-    "name" : "my-metaverse-token-slae",
+    "name": "my-metaverse-token-slae",
     "version": "1.0.0",
     "description": "My Metaverse Token Sale",
     "main": "truffle.js",
@@ -7,10 +7,10 @@
         "test": "test"
     },
     "scripts": {
-        "dev":"lite-server"
+        "dev": "lite-server"
     },
-    "author":{
-        "name":"Aleksandr Papchikhin"
+    "author": {
+        "name": "Aleksandr Papchikhin"
     },
     "license": "ISC",
     "devDependencies": {
